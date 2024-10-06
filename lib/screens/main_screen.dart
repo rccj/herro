@@ -4,14 +4,23 @@ import 'chat_list_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  final int initialIndex;
+
+  const MainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
   final List<Widget> _widgetOptions = [
     SwipeScreen(),
     ChatListScreen(),
@@ -31,25 +40,26 @@ class _MainScreenState extends State<MainScreen> {
         index: _selectedIndex,
         children: _widgetOptions,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: '探索',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: '訊息',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '個人',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+      bottomNavigationBar: Container(
+        height: 60,
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () => _onItemTapped(0),
+            ),
+            IconButton(
+              icon: Icon(Icons.message),
+              onPressed: () => _onItemTapped(1),
+            ),
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () => _onItemTapped(2),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -23,9 +23,13 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MainScreen(),
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegistrationScreen(),
+        '/swipe': (context) => const MainScreen(initialIndex: 0),
+        '/chatRoom': (context) => const MainScreen(initialIndex: 1),
+        '/profile': (context) => const MainScreen(initialIndex: 2),
         },
       ),
     );
