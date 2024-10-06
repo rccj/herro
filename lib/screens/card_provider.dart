@@ -54,15 +54,12 @@ class CardProvider with ChangeNotifier {
     switch(status) {
       case CardStatus.like:
         like();
-        _nextCard();
         break;
       case CardStatus.dislike:
         dislike();
-        _nextCard();
         break;
       case CardStatus.superLike:
         superLike();
-        _nextCard();
         break;
       default:
         resetPosition();
@@ -91,21 +88,25 @@ class CardProvider with ChangeNotifier {
     }
   }
 
-
    void like() {
     _angle = 20;
     _position += Offset(2 * _screenSize.width, 0);
+    _nextCard();
     notifyListeners();
   }
 
   void dislike() {
     _angle = -20;
     _position -= Offset(2 * _screenSize.width, 0);
+    _nextCard();
+    notifyListeners();
   }
 
   void superLike() {
     _angle = 0;
     _position -= Offset(0,  _screenSize.width);
+    _nextCard();
+    notifyListeners();
   }
 
   Future _nextCard() async {
