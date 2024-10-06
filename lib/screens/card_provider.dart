@@ -51,14 +51,6 @@ class CardProvider with ChangeNotifier {
     notifyListeners();
     final status = getStatus();
 
-    if (status != null) {
-      Fluttertoast.cancel();
-      Fluttertoast.showToast(
-        msg: status.toString().split('.').last.toUpperCase(),
-        fontSize: 36,
-      );
-    }
-
     switch(status) {
       case CardStatus.like:
         like();
