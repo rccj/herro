@@ -23,19 +23,34 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('探索'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: buildCards(),
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.red.shade200,
+            Colors.black,
+          ],
+        )),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('探索'),
+            automaticallyImplyLeading: false,
           ),
-          buildButtons(),
-        ],
-      ),
-    );
+          body: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Expanded(child: buildCards()),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: buildButtons(),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget buildCards() {
@@ -45,7 +60,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     return users.isEmpty
         ? Center(
             child: (ElevatedButton(
-                child: Text('重新載入'),
+                child: Text('🥲'),
                 onPressed: () {
                   final provider =
                       Provider.of<CardProvider>(context, listen: false);
@@ -80,7 +95,12 @@ class _SwipeScreenState extends State<SwipeScreen> {
             curve: Curves.easeInOut,
             duration: Duration(milliseconds: milliseconds),
             transform: rotatedMatrix..translate(position.dx, position.dy),
-            child: buildCard(user),
+            child: Stack(
+              children: [
+                buildCard(user),
+                buildStamps(user),
+              ],
+            ),
           );
         },
       ),
@@ -101,90 +121,221 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
   Widget buildCard(User user) {
     return Card(
-      elevation: 8,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        // child: Container(
-        //   decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //       image: NetworkImage(user.imageUrl),
-        //       fit: BoxFit.cover,
-        //       alignment: Alignment(-0.3, 0),
-        //     ),
-        //   ),
-        // ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(user.imageUrl),
-                  fit: BoxFit.cover,
-                  alignment: Alignment(-0.3, 0),
-                ),
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(user.imageUrl),
+              fit: BoxFit.cover,
+              alignment: Alignment(-0.3, 0),
             ),
-            Align(
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+              colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+              end: Alignment.bottomCenter,
+              begin: Alignment.topCenter,
+              stops: [0.7, 1],
+            )),
+            child: Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${user.name}, ${user.age}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user.name}, ${user.age}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      user.distance,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      SizedBox(height: 8),
+                      Text(
+                        user.description,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          buildCircleButton(Icons.close, Colors.red, () {}),
-          buildCircleButton(Icons.favorite, Colors.green, () {}),
-        ],
+    final provider = Provider.of<CardProvider>(context);
+    final users = provider.users;
+    final status = provider.getStatus();
+    final isLike = status == CardStatus.like;
+    final isDislike = status == CardStatus.dislike;
+    final isSuperLike = status == CardStatus.superLike;
+
+    return users.isEmpty
+        ? ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Text('Restart'),
+            onPressed: () {
+              final provider =
+                  Provider.of<CardProvider>(context, listen: false);
+              provider.resetUsers();
+            },
+          )
+        : Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: getColor(Colors.red, Colors.white, isDislike),
+                backgroundColor: getColor(Colors.white, Colors.red, isDislike),
+                side: getBorder(Colors.red, Colors.white, isDislike),
+              ),
+              child: Icon(Icons.clear, size: 36),
+              onPressed: () {
+                final provider =
+                    Provider.of<CardProvider>(context, listen: false);
+                provider.dislike();
+              },
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor:
+                    getColor(Colors.blue, Colors.white, isSuperLike),
+                backgroundColor:
+                    getColor(Colors.white, Colors.blue, isSuperLike),
+                side: getBorder(Colors.blue, Colors.white, isSuperLike),
+              ),
+              child: Icon(Icons.star, size: 36),
+              onPressed: () {
+                final provider =
+                    Provider.of<CardProvider>(context, listen: false);
+                provider.superLike();
+              },
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: getColor(Colors.green, Colors.white, isLike),
+                backgroundColor: getColor(Colors.white, Colors.green, isLike),
+                side: getBorder(Colors.green, Colors.white, isLike),
+              ),
+              child: Icon(Icons.favorite, size: 36),
+              onPressed: () {
+                final provider =
+                    Provider.of<CardProvider>(context, listen: false);
+                provider.like();
+              },
+            ),
+          ]);
+  }
+
+  Widget buildStamps(User user) {
+    final provider = Provider.of<CardProvider>(context);
+    final status = provider.getStatus();
+    final opacity = provider.getStatusOpacity();
+
+    switch (status) {
+      case CardStatus.like:
+        final child = buildStamp(
+            angle: -0.5, color: Colors.green, text: 'LIKE', opacity: opacity);
+        return Positioned(
+          top: 64,
+          left: 50,
+          child: child,
+        );
+      case CardStatus.dislike:
+        final child = buildStamp(
+            angle: 0.5, color: Colors.red, text: 'NOPE', opacity: opacity);
+        return Positioned(
+          top: 64,
+          right: 50,
+          child: child,
+        );
+      case CardStatus.superLike:
+        final child = Center(
+          child: buildStamp(
+              angle: 0,
+              color: Colors.blue,
+              text: 'SUPER\nLIKE',
+              opacity: opacity),
+        );
+        return Positioned(
+          bottom: 128,
+          left: 0,
+          right: 0,
+          child: child,
+        );
+      default:
+        return Container();
+    }
+  }
+
+  Widget buildStamp({
+    double angle = 0,
+    required Color color,
+    required String text,
+    required double opacity,
+  }) {
+    return Opacity(
+      opacity: opacity,
+      child: Transform.rotate(
+        angle: angle,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color, width: 4),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: color,
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget buildCircleButton(IconData icon, Color color, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-        child: Icon(icon, color: Colors.white, size: 30),
-      ),
-    );
+  WidgetStateProperty<Color> getColor(
+      Color color, Color colorPressed, bool force) {
+    getColor(Set<WidgetState> states) {
+      if (force || states.contains(WidgetState.pressed)) {
+        return colorPressed;
+      } else {
+        return color;
+      }
+    }
+
+    return WidgetStateProperty.resolveWith(getColor);
+  }
+
+  WidgetStateProperty<BorderSide> getBorder(
+      Color color, Color colorPressed, bool force) {
+    getBorder(Set<WidgetState> states) {
+      if (force || states.contains(WidgetState.pressed)) {
+        return BorderSide(color: Colors.transparent);
+      } else {
+        return BorderSide(color: color, width: 2);
+      }
+    }
+
+    return WidgetStateProperty.resolveWith(getBorder);
   }
 }

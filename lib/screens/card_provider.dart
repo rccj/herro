@@ -1,14 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class User {
   final String name;
   final int age;
-  final String distance;
+  final String description;
   final String imageUrl;
   final int id;
 
-  User({required this.name, required this.age, required this.distance, required this.imageUrl, required this.id});
+  User({required this.name, required this.age, required this.description, required this.imageUrl, required this.id});
 }
 
 enum CardStatus { like, dislike, superLike }
@@ -49,7 +50,7 @@ class CardProvider with ChangeNotifier {
   void endPosition(DragEndDetails details) {  
     _isDragging = false;
     notifyListeners();
-    final status = getStatus();
+    final status = getStatus(force: true);
 
     switch(status) {
       case CardStatus.like:
@@ -73,12 +74,19 @@ class CardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  CardStatus? getStatus() {
+  double getStatusOpacity() {
+    final delta = 100;
+    final pos = max(_position.dx.abs(), _position.dy.abs());
+    final opacity = pos / delta;
+    return min(opacity, 1);
+  }
+
+  CardStatus? getStatus({bool force = false}) {
     final x = _position.dx;
     final y = _position.dy;
+    final delta = force ? 100 : 20;
     final forceSuperLike = x.abs() < 20;
 
-    final delta = 100;
     if (x >= delta) {
       return CardStatus.like;
     } else if (x <= -delta) {
@@ -119,11 +127,11 @@ class CardProvider with ChangeNotifier {
 
   void resetUsers() {
     _users = [
-      User(name: "Alice", age: 25, distance: "5 km", imageUrl: 'https://picsum.photos/id/1001/1000/1500', id: 1),
-      User(name: "Bob", age: 28, distance: "3 km", imageUrl: 'https://picsum.photos/id/1002/1000/1500', id: 2),
-      User(name: "Charlie", age: 23, distance: "7 km", imageUrl: 'https://picsum.photos/id/1003/1000/1500', id: 3),
-      User(name: "Diana", age: 26, distance: "2 km", imageUrl: 'https://picsum.photos/id/1004/1000/1500', id: 4),
-      User(name: "Ethan", age: 30, distance: "10 km", imageUrl: 'https://picsum.photos/id/1005/1000/1500', id: 5),
+      User(name: "Alice", age: 25, description: "Hi", imageUrl: 'https://picsum.photos/id/1001/1000/1500', id: 1),
+      User(name: "Bob", age: 28, description: "Hello", imageUrl: 'https://picsum.photos/id/1002/1000/1500', id: 2),
+      User(name: "Charlie", age: 23, description: "你好", imageUrl: 'https://picsum.photos/id/1003/1000/1500', id: 3),
+      User(name: "Diana", age: 26, description: "烏拉", imageUrl: 'https://picsum.photos/id/1004/1000/1500', id: 4),
+      User(name: "Ethan", age: 30, description: "呀～～～", imageUrl: 'https://picsum.photos/id/1005/1000/1500', id: 5),
     ].reversed.toList();
 
     notifyListeners();

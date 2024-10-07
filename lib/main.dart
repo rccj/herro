@@ -19,9 +19,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tinder Clone',
         theme: ThemeData(
-        primarySwatch: Colors.red,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+          primarySwatch: Colors.red,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              shape: CircleBorder(),
+              minimumSize: Size.square(72)
+            ),
+          ),
+        ),
       home: const MainScreen(),
       initialRoute: '/login',
       routes: {
