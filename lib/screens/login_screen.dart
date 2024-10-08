@@ -1,69 +1,85 @@
 import 'package:flutter/material.dart';
+// 導入必要的包
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo
-              FlutterLogo(size: 100),
-              SizedBox(height: 50),
-              
-              // Email input
-              TextField(
-                decoration: InputDecoration(
-                  hintText: '電子郵件',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.blue[50]!, Colors.blue[100]!],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // LOGO
+                Padding(
+                  padding: EdgeInsets.only(bottom: 48.0),
+                  child: FlutterLogo(size: 100),
                 ),
-              ),
-              SizedBox(height: 20),
-              
-              // Password input
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: '密碼',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                // Google 登入按鈕
+                ElevatedButton.icon(
+                  icon: Icon(Icons.g_mobiledata, color: Colors.red, size: 24),
+                  label: Text('使用 Google 帳號登入'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black87,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                   ),
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(context, '/swipe', (route) => false);
+                  },
                 ),
-              ),
-              SizedBox(height: 30),
-              
-              // Login button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/swipe');
-                },
-                child: Text('登入'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                SizedBox(height: 16),
+                // Apple 登入按鈕
+                ElevatedButton.icon(
+                  icon: Icon(Icons.apple, color: Colors.white, size: 24),
+                  label: Text('使用 Apple 帳號登入'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black87,
+                    foregroundColor: Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                   ),
+                  onPressed: () {
+                    // 實現 Apple 登入邏輯
+                  },
                 ),
-              ),
-              SizedBox(height: 20),
-              
-              // Register button
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-                child: Text('還沒有帳號？立即註冊'),
-              ),
-            ],
+                SizedBox(height: 16),
+                // 電話登入按鈕
+                ElevatedButton.icon(
+                  icon: Icon(Icons.phone, color: Colors.white, size: 24),
+                  label: Text('使用電話號碼登入'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[700],
+                    foregroundColor: Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onPressed: () {
+                    // 實現電話登入邏輯或導航到電話登入頁面
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

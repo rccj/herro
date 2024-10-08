@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
       home: const MainScreen(),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegistrationScreen(),
+        '/login': (context) =>  LoginScreen(),
+        '/register': (context) => RegistrationScreen(),
         '/swipe': (context) => const MainScreen(initialIndex: 0),
         '/chatRoom': (context) => const MainScreen(initialIndex: 1),
         '/profile': (context) => const MainScreen(initialIndex: 2),

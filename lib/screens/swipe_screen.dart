@@ -36,7 +36,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text('探索'),
-            automaticallyImplyLeading: false,
           ),
           body: Padding(
             padding: const EdgeInsets.all(8),
