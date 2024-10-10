@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:konwyou/screens/chat_room.dart';
+import 'package:herro/screens/chat_room.dart';
 import 'chat_room.dart'; // Comment this out if the file doesn't exist
 
 class ChatListScreen extends StatelessWidget {

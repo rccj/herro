@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:konwyou/screens/card_provider.dart';
+import 'package:herro/screens/card_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' show pi;
 
