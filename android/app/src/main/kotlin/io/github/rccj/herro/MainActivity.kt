@@ -1,4 +1,4 @@
-package com.example.herro
+package io.github.rccj.herro
 
 import io.flutter.embedding.android.FlutterActivity
 
