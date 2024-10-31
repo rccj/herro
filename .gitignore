@@ -2,8 +2,9 @@
 # See https://github.com/flutter/flutter/issues/128635 for more context.
 
 # Firebase configuration files
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
+**/ios/Runner/GoogleService-Info.plist
+**/android/app/google-services.json
+**/ios/Flutter/Firebase.xcconfig
 macos/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
 
